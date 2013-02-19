@@ -10,10 +10,13 @@ FIELDS = ('vsz',  # vm size
           'dt')   # dirty size
 
 def pages_to_kb(num):
-    return num * PAGE_SIZE / 1024
+    return int(num) * PAGE_SIZE / 1024
 
 def stats_in_kb():
     statm = open('/proc/self/statm').read().strip()
-    return dict(zip(FIELDS, statm.split()))
+    int_fields = map(pages_to_kb, statm.split())
+    return dict(zip(FIELDS, int_fields))
 
-print stats_in_kb()
+if __name__ == '__main__':
+    import pprint
+    pprint.pprint(stats_in_kb())
